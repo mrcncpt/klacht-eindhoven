@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Klacht Eindhoven Airport — 1-tik melden
 // @namespace    https://ralfkerkhof.nl/klacht-eindhoven
-// @version      1.6.0
-// @description  Dien automatisch een geluidsklacht in bij Eindhoven Airport. Subcause via ?sub=N (1=Slaapverstoring, 2=Geluid in huis, 3=Geluid buiten, 7=Grondgeluid). Random delays voor anti-bot, progressbar. Pingt install.html zodat Tampermonkey-installatie zichtbaar is.
+// @version      1.7.0
+// @description  Dien automatisch een geluidsklacht in bij Eindhoven Airport. Subcause via ?sub=N (1=Slaapverstoring, 2=Geluid in huis, 3=Geluid buiten, 7=Grondgeluid). Random delays, progressbar, Tampermonkey-detectie. Na succesvolle klacht navigeert hij terug naar de PWA-launcher zodat je direct opnieuw kan klagen.
 // @match        https://ein.flighttracking.casper.aero/portal/*
 // @match        https://mrcncpt.github.io/klacht-eindhoven/*
 // @run-at       document-end
@@ -20,8 +20,8 @@
         var ping = function () {
             if (!document.body) { setTimeout(ping, 30); return; }
             try {
-                document.body.dataset.tmKlachtScript = '1.6.0';
-                document.dispatchEvent(new CustomEvent('tm-klacht-loaded', { detail: { version: '1.6.0' } }));
+                document.body.dataset.tmKlachtScript = '1.7.0';
+                document.dispatchEvent(new CustomEvent('tm-klacht-loaded', { detail: { version: '1.7.0' } }));
             } catch (e) {}
         };
         ping();
@@ -232,7 +232,18 @@
                             delay(400, 900, function () {
                                 clickBtn('#cl_next');
                                 clearFlag();
-                                showBanner(100, 'Klacht ingediend ✓', '#16a34a');
+                                showBanner(100, 'Klacht ingediend ✓ — terug naar app...', '#16a34a');
+                                // Navigeer na 2 seconden terug naar de PWA-launcher zodat user direct opnieuw kan klagen
+                                setTimeout(function () {
+                                    var subToType = { '1': 'slaap', '2': 'binnen', '3': 'buiten' };
+                                    var t = subToType[SETTINGS.subcauseValue];
+                                    if (t) {
+                                        location.replace('https://mrcncpt.github.io/klacht-eindhoven/' + t + '.html?done=1');
+                                    } else {
+                                        try { window.close(); } catch (e) {}
+                                        try { history.back(); } catch (e) {}
+                                    }
+                                }, 2000);
                             });
                         } else {
                             clearFlag();
