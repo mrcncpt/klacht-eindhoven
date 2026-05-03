@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+undefined<!DOCTYPE html>
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
@@ -42,12 +42,25 @@
   .recommended{display:inline-block;background:#22c55e;color:#0e1320;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;letter-spacing:0.5px}
   .footer{text-align:center;color:#6b7280;font-size:12px;margin-top:30px}
   .footer a{color:#9aa3b2}
+  .ff-warn{display:none;background:#dc2626;color:#fff;border-radius:12px;padding:18px 20px;margin-bottom:20px;border:3px solid #fca5a5;animation:pulse 1.6s ease-in-out infinite}
+  .ff-warn.show{display:block}
+  .ff-warn h2{margin:0 0 8px;font-size:18px;color:#fff}
+  .ff-warn p{margin:6px 0;font-size:14px;color:#fff}
+  .ff-warn a.btn-ff{display:inline-block;background:#fff;color:#dc2626;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;margin-top:10px}
+  @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 rgba(220,38,38,0.6)}50%{transform:scale(1.015);box-shadow:0 0 28px rgba(220,38,38,0.7)}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Klacht-NU</h1>
   <p class="sub">Eén tik = automatische geluidsklacht bij Eindhoven Airport</p>
+
+  <div class="ff-warn" id="ffWarn">
+    <h2>⚠️ Open deze pagina eerst in Firefox</h2>
+    <p>Je gebruikt nu Chrome. Op Android werkt dit alleen met Firefox — Chrome ondersteunt geen userscripts en kan de Klacht-app niet installeren.</p>
+    <p>Tap onderstaande knop om deze pagina in Firefox te heropenen (installeer Firefox eerst als je hem nog niet hebt).</p>
+    <a class="btn-ff" id="ffOpenBtn" href="#">▶️ Heropen in Firefox</a>
+  </div>
 
   <div class="intro">
     <p><b>Wat doet deze app?</b></p>
@@ -201,6 +214,24 @@
       document.querySelector('[data-tab=iphone]').click();
     } else if (!/Android/.test(ua)) {
       document.querySelector('[data-tab=desktop]').click();
+    }
+  })();
+
+  // Detect Chrome on Android — show warning + Firefox-intent link
+  (function(){
+    var ua = navigator.userAgent;
+    var isAndroid = /Android/.test(ua);
+    var isFirefox = /Firefox|FxiOS/i.test(ua);
+    if (isAndroid && !isFirefox) {
+      var warn = document.getElementById('ffWarn');
+      var btn = document.getElementById('ffOpenBtn');
+      // Build intent URL forcing Firefox
+      var here = location.host + location.pathname + location.search;
+      btn.href = 'intent://' + here + '#Intent;scheme=https;package=org.mozilla.firefox;S.browser_fallback_url=' +
+        encodeURIComponent('https://play.google.com/store/apps/details?id=org.mozilla.firefox') + ';end';
+      warn.classList.add('show');
+      // Scroll to top so warning is visible
+      window.scrollTo(0, 0);
     }
   })();
 </script>
