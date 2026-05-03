@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Klacht Eindhoven Airport — 1-tik melden
 // @namespace    https://ralfkerkhof.nl/klacht-eindhoven
-// @version      1.0.0
-// @description  Dien automatisch een geluidsklacht in bij Eindhoven Airport (Casper-portaal). Trigger: voeg #klachtnu toe aan de portal-URL of klik op de bookmarklet.
+// @version      1.1.0
+// @description  Dien automatisch een geluidsklacht in bij Eindhoven Airport (Casper-portaal). Trigger: open de portaal-URL met ?klachtnu=1 (of #klachtnu) en het script doorloopt automatisch alle stappen.
 // @match        https://ein.flighttracking.casper.aero/portal/*
 // @run-at       document-end
 // @grant        none
@@ -31,9 +31,22 @@
     var url = location.href;
     var bodyId = (document.body && document.body.id) || '';
 
-    // 1) Trigger: hash #klachtnu, query ?klachtnu=1, of een opgeslagen flag
-    if (location.hash.toLowerCase().indexOf('klachtnu') !== -1 ||
-        /[?&]klachtnu(=|&|$)/i.test(location.search)) {
+    // Visuele indicator: kleine banner zodra het script in auto-modus draait
+    function showBanner(text, color) {
+        if (document.getElementById('__klacht_banner')) return;
+        var b = document.createElement('div');
+        b.id = '__klacht_banner';
+        b.textContent = text;
+        b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:' + (color || '#22c55e') +
+            ';color:#fff;padding:8px;text-align:center;font-weight:bold;z-index:99999;font-family:sans-serif;font-size:13px;';
+        document.body.appendChild(b);
+    }
+
+    // 1) Trigger: query ?klachtnu, hash #klachtnu, of een opgeslagen flag
+    var hasTrigger = /[?&]klachtnu(=|&|$)/i.test(location.search) ||
+                     location.hash.toLowerCase().indexOf('klachtnu') !== -1;
+
+    if (hasTrigger) {
         sessionStorage.setItem(FLAG, '1');
         // Bewaar evt. tijd uit ?tijd=HH:MM
         var m = location.search.match(/[?&]tijd=([0-2]?\d:[0-5]\d)/i);
@@ -46,17 +59,21 @@
                 String(now.getMinutes()).padStart(2, '0')
             );
         }
-        // Schoon hash/query op zodat refresh niet opnieuw triggert
-        try {
-            history.replaceState({}, '', location.pathname + '?p=complaint-1');
-            location.href = '/portal/?p=complaint-1';
-        } catch (e) {
-            location.href = '/portal/?p=complaint-1';
+        // Als we al op complaint-1 staan zonder trigger-params: gewoon doorgaan met stap 1
+        var alreadyOnStep1 = (location.pathname === '/portal/' || location.pathname === '/portal') &&
+                              location.search === '?p=complaint-1' && !location.hash;
+        if (!alreadyOnStep1) {
+            // Force een echte navigation, anders blijft Firefox op dezelfde page hangen
+            location.replace('/portal/?p=complaint-1');
+            return;
         }
-        return;
+        // Val door naar de per-page handler hieronder
     }
 
     if (sessionStorage.getItem(FLAG) !== '1') return; // niet in auto-modus
+
+    // Vanaf hier: auto-modus actief
+    showBanner('Klacht-NU: stap ' + (bodyId || 'onbekend') + ' \u2014 even geduld...');
 
     // Helper: wacht tot een conditie waar is
     function wait(test, cb, tries) {
