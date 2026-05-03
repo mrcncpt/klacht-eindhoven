@@ -164,7 +164,7 @@
       <p>Op iOS kun je geen userscripts in Firefox draaien (Apple staat alleen WebKit toe). Mogelijke alternatieven:</p>
       <p>• <b>Userscripts-app</b> (Safari-extensie, betaald in App Store) + handmatig script importeren.</p>
       <p>• Gebruik je iPhone om in te loggen op het portaal en klaag handmatig.</p>
-      <p>Wil je hier hulp bij? Stuur me een berichtje.</p>
+      <p>Wil je hier hulp bij? Stuur me een berichtje</p>
     </div>
   </div>
 
@@ -248,7 +248,7 @@
     }, 50);
   })();
 
-  // Detect Chrome on Android — show warning + Firefox-intent link
+  // Detect Chrome on Android — show warning + Firefox-intent link + convert ALL external https-links to Firefox-intent
   (function(){
     var ua = navigator.userAgent;
     var isAndroid = /Android/.test(ua);
@@ -261,6 +261,17 @@
         encodeURIComponent('https://play.google.com/store/apps/details?id=org.mozilla.firefox') + ';end';
       warn.classList.add('show');
       window.scrollTo(0, 0);
+      // Force Firefox for all external https links (Casper-portaal, script-install, Play Store, etc.)
+      document.querySelectorAll('a[href^="https://"]').forEach(function(a){
+        try {
+          var u = new URL(a.href);
+          // Skip Play Store fallback URL — that needs to stay https for the fallback to work
+          if (a.id === 'ffOpenBtn') return;
+          a.href = 'intent://' + u.host + u.pathname + u.search + u.hash +
+            '#Intent;scheme=https;package=org.mozilla.firefox;end';
+          a.removeAttribute('target');
+        } catch(e){}
+      });
     }
   })();
 </script>
