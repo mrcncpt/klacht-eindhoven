@@ -49,6 +49,12 @@
   .card a{color:#ffb800}
   small{color:#9aa6bd;font-size:12px;display:block;text-align:center;margin-top:14px}
   .reset-link{display:inline-block;color:#9aa6bd;font-size:13px;text-decoration:underline;margin-top:6px}
+  .ff-warn{display:none;background:#dc2626;color:#fff;border-radius:14px;padding:18px 20px;margin-bottom:18px;border:3px solid #fca5a5;animation:pulseRed 1.6s ease-in-out infinite}
+  .ff-warn.show{display:block}
+  .ff-warn h2{margin:0 0 8px;font-size:18px;color:#fff}
+  .ff-warn p{margin:6px 0;font-size:14px;color:#fff}
+  .ff-warn a.btn-ff{display:inline-block;background:#fff;color:#dc2626;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:15px;margin-top:10px}
+  @keyframes pulseRed{0%,100%{transform:scale(1);box-shadow:0 0 0 rgba(220,38,38,.4)}50%{transform:scale(1.015);box-shadow:0 0 24px rgba(220,38,38,.7)}}
 </style>
 </head>
 <body>
@@ -56,6 +62,13 @@
   <div class="ic">✈️</div>
   <h1>Klacht NU</h1>
   <p class="lead">Eindhoven Airport — automatische klachtmelder</p>
+
+  <div class="ff-warn" id="ffWarn">
+    <h2>⚠️ Open deze pagina eerst in Firefox</h2>
+    <p>Je gebruikt nu Chrome. Op Android werkt het Klacht-script alleen in Firefox — Chrome ondersteunt geen userscripts.</p>
+    <p>Tap onderstaande knop om deze pagina in Firefox te heropenen.</p>
+    <a class="btn-ff" id="ffOpenBtn" href="#">▶️ Heropen in Firefox</a>
+  </div>
 
   <div class="pickhint">
     <strong>👇 Kies één klachttype</strong>
@@ -128,6 +141,17 @@
   var isFirefox = /Firefox/.test(ua);
   var isAndroid = /Android/.test(ua);
   var isFirefoxAndroid = isFirefox && isAndroid;
+
+  // Force Firefox: toon waarschuwing als gebruiker op Android in Chrome zit
+  if (isAndroid && !isFirefox) {
+    var warn = document.getElementById('ffWarn');
+    var ffBtn = document.getElementById('ffOpenBtn');
+    var here = location.host + location.pathname + location.search;
+    ffBtn.href = 'intent://' + here + '#Intent;scheme=https;package=org.mozilla.firefox;S.browser_fallback_url=' +
+      encodeURIComponent('https://play.google.com/store/apps/details?id=org.mozilla.firefox') + ';end';
+    warn.classList.add('show');
+    window.scrollTo(0, 0);
+  }
 
   // FORCE FIREFOX op Android: vervang knop-href met intent:// URL
   // op andere platforms blijft de https-URL behouden
