@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klacht NU</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ffb800">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Klacht NU">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ffb800'/%3E%3Ctext x='50' y='65' font-size='52' text-anchor='middle' font-family='sans-serif' font-weight='bold' fill='%231a1300'%3E!%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ffb800'/%3E%3Ctext x='50' y='65' font-size='52' text-anchor='middle' font-family='sans-serif' font-weight='bold' fill='%231a1300'%3E!%3C/text%3E%3C/svg%3E">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0e1320;color:#e8eef9;font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh}
+  .wrap{max-width:480px;margin:0 auto;padding:24px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .ic{font-size:64px;text-align:center;margin-bottom:8px}
+  h1{margin:0 0 8px;color:#ffb800;font-size:28px;text-align:center;font-weight:800}
+  .lead{text-align:center;color:#9aa6bd;margin:0 0 24px;font-size:15px}
+  .btn{display:block;width:100%;background:#ffb800;color:#1a1300;border:0;border-radius:14px;padding:18px;font-size:18px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:12px}
+  .btn:active{transform:translateY(1px)}
+  .btn.green{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;box-shadow:0 4px 16px rgba(34,197,94,.4)}
+  .card{background:#161d2f;border:1px solid #243150;border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h3{margin:0 0 8px;color:#ffb800;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+  .card p, .card li{margin:6px 0;color:#cfd8ec;font-size:14px}
+  .card ol{padding-left:22px;margin:8px 0}
+  .card a{color:#ffb800}
+  small{color:#9aa6bd;font-size:13px;display:block;text-align:center}
+  .pulse{animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+  .hidden{display:none !important}
+  .ok{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.4);border-radius:10px;padding:10px;color:#22c55e;font-size:13px;text-align:center;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="ic">✈️</div>
+  <h1>Klacht NU</h1>
+  <p class="lead" id="lead">Eerste keer hier? Voeg toe aan startscherm.<br>Daarna: één tik = klacht ingediend.</p>
+
+  <div class="ok hidden" id="installed-banner">✓ Klacht NU is op je startscherm — tik nu hieronder om je eerste klacht in te dienen.</div>
+
+  <button class="btn green hidden pulse" id="installBtn">📥  Toevoegen aan startscherm</button>
+
+  <button class="btn pulse" id="goBtn">➜  Klacht NU indienen</button>
+
+  <div class="card hidden" id="manualInstall">
+    <h3>Of installeer handmatig</h3>
+    <p><strong>Android (Firefox):</strong> Menu (⋮) → Toevoegen aan startscherm.</p>
+    <p><strong>iPhone (Safari):</strong> Deelmenu (deel-knop onderaan) → Zet op beginscherm.</p>
+    <p><strong>Desktop:</strong> Bladwijzer toevoegen (Ctrl+D).</p>
+    <p style="margin-top:12px">→ Naam: <strong>Klacht NU</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>Eerst installeren?</h3>
+    <p><a href="install.html">→ Open de installatie-instructies</a> als het script nog niet werkt.</p>
+  </div>
+
+  <small>Tikt iemand op het Klacht NU-icoon vanaf homescreen, dan wordt automatisch je klacht ingediend.</small>
+</div>
+
+<script>
+  var TARGET = 'https://ein.flighttracking.casper.aero/portal/?klachtnu=1';
+
+  // 1) Direct redirect bij PWA-launch / Safari-iOS-standalone / al eens geinstalleerd-flag
+  var isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  var isIOSAdded = window.navigator.standalone === true;
+  var hasUsedBefore = localStorage.getItem('klachtNuInstalled') === 'yes';
+
+  if (isStandalone || isIOSAdded || hasUsedBefore) {
+    location.replace(TARGET);
+  }
+
+  // 2) PWA install prompt opvangen
+  var deferredPrompt = null;
+  var installBtn = document.getElementById('installBtn');
+  var manualCard = document.getElementById('manualInstall');
+  var installedBanner = document.getElementById('installed-banner');
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    // Voorkom dat browser eigen banner toont
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.classList.remove('hidden');
+  });
+
+  // Als install niet beschikbaar (iOS, Firefox-iOS, oude browsers): toon handmatige instructies
+  setTimeout(function () {
+    if (!deferredPrompt) {
+      manualCard.classList.remove('hidden');
+    }
+  }, 1500);
+
+  // Klik op "Toevoegen aan startscherm" knop
+  installBtn.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function (choice) {
+      if (choice.outcome === 'accepted') {
+        installBtn.classList.add('hidden');
+        installedBanner.classList.remove('hidden');
+        localStorage.setItem('klachtNuInstalled', 'yes');
+      }
+      deferredPrompt = null;
+    });
+  });
+
+  // Klik op "Klacht NU indienen" knop — onthoudt en redirect
+  document.getElementById('goBtn').addEventListener('click', function () {
+    localStorage.setItem('klachtNuInstalled', 'yes');
+    location.href = TARGET;
+  });
+
+  // Detecteer wanneer PWA succesvol geinstalleerd is
+  window.addEventListener('appinstalled', function () {
+    localStorage.setItem('klachtNuInstalled', 'yes');
+    installBtn.classList.add('hidden');
+    installedBanner.classList.remove('hidden');
+  });
+</script>
+</body>
+</html>
