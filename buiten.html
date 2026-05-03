@@ -23,10 +23,13 @@
   .btn-go{background:#f59e0b;color:#fff;box-shadow:0 4px 16px rgba(245,158,11,.4);animation:glow 1.8s ease-in-out infinite}
   @keyframes glow{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
   .btn-pwa{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.4)}
+  .btn-pwa.hidden-after-install{display:none}
   .hidden{display:none!important}
   .info{background:#161d2f;border:1px solid #243150;border-radius:14px;padding:14px;margin-top:18px;font-size:13px;color:#cfd8ec;line-height:1.55}
   .info a{color:#ffb800}
   .ff-card{background:linear-gradient(135deg,#ff9f00,#ff6b00);color:#fff;border-radius:16px;padding:18px;margin:14px 0}
+  .ff-card.flash{animation:flash 0.6s ease-in-out 3}
+  @keyframes flash{0%,100%{box-shadow:0 0 0 rgba(255,159,0,0.4)}50%{box-shadow:0 0 0 12px rgba(255,159,0,0.1)}}
   .ff-card h3{margin:0 0 10px;font-size:16px;text-align:center}
   .ff-step{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
   .ff-num{flex:0 0 24px;height:24px;border-radius:50%;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
@@ -43,7 +46,7 @@
   <div class="badge">T</div>
   <h1>Klacht Geluid Buiten</h1>
   <p class="lead">Vliegtuig hoorbaar in tuin / op straat — dient direct een klacht in</p>
-  <button class="btn btn-pwa hidden" id="installBtn"><span class="em">📥</span><span class="ttl">Toevoegen aan startscherm<small>Daarna 1 tap = klacht ingediend</small></span></button>
+  <button class="btn btn-pwa" id="installBtn"><span class="em">📥</span><span class="ttl">Toevoegen aan startscherm<small>Daarna 1 tap = klacht ingediend</small></span></button>
   <div class="ff-card hidden" id="ffCard">
     <h3>📲 Installeer als app op je startscherm</h3>
     <div class="ff-step"><div class="ff-num">1</div>Tik <span class="ff-key">⋮</span> in Firefox-menu (rechtsonder op Android)</div>
@@ -68,16 +71,27 @@
   var deferredPrompt = null;
   var installBtn = document.getElementById('installBtn');
   var ffCard = document.getElementById('ffCard');
-  // Chromium: beforeinstallprompt fires — show install button
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); ffCard.classList.add('hidden'); });
-  // Firefox Android (en alle Android-non-Chrome): toon ff-card meteen — Firefox vuurt nooit beforeinstallprompt
-  if (isAndroid && !isStandalone) {
-    // Toon meteen, hide alleen als Chromium toch een install-prompt aanbiedt
-    setTimeout(function () { if (!deferredPrompt) ffCard.classList.remove('hidden'); }, 100);
-  }
-  installBtn.addEventListener('click', function () { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(function () { installBtn.classList.add('hidden'); localStorage.setItem(FLAG, 'yes'); }); deferredPrompt = null; });
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; });
+  installBtn.addEventListener('click', function () {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function (r) {
+        if (r && r.outcome === 'accepted') {
+          installBtn.classList.add('hidden-after-install');
+          localStorage.setItem(FLAG, 'yes');
+        }
+      });
+      deferredPrompt = null;
+    } else {
+      ffCard.classList.remove('hidden');
+      ffCard.classList.remove('flash');
+      void ffCard.offsetWidth;
+      ffCard.classList.add('flash');
+      ffCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
   document.getElementById('goBtn').addEventListener('click', function () { localStorage.setItem(FLAG, 'yes'); });
-  window.addEventListener('appinstalled', function () { localStorage.setItem(FLAG, 'yes'); installBtn.classList.add('hidden'); ffCard.classList.add('hidden'); });
+  window.addEventListener('appinstalled', function () { localStorage.setItem(FLAG, 'yes'); installBtn.classList.add('hidden-after-install'); ffCard.classList.add('hidden'); });
 </script>
 </body>
 </html>
