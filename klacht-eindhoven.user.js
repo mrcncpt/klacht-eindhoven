@@ -1,5 +1,4 @@
-TEST_CONTENT_HERE
-Line// ==UserScript==
+// ==UserScript==
 // @name         Klacht Eindhoven Airport — 1-tik melden
 // @namespace    https://ralfkerkhof.nl/klacht-eindhoven
 // @version      1.0.0
@@ -95,7 +94,7 @@ Line// ==UserScript==
         });
 
     } else if (bodyId === 'complaint-specific') {
-        // Stap 3: vul datum (vandaai� en tijd
+        // Stap 3: vul datum (vandaag) en tijd
         wait(function () { return document.querySelector('input[name=time]') && document.querySelector('input[name=date]'); }, function () {
             var now = new Date();
             // <input type="date"> verwacht yyyy-mm-dd
