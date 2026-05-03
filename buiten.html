@@ -31,10 +31,11 @@
   .ff-step{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
   .ff-num{flex:0 0 24px;height:24px;border-radius:50%;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
   .ff-key{display:inline-block;background:rgba(0,0,0,.3);padding:2px 8px;border-radius:6px;font-weight:800;font-family:ui-monospace,Menlo,monospace}
-  .arrow{font-size:24px;text-align:center;animation:bounce 1.2s infinite;margin:2px 0 6px}
-  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .arrow-down{font-size:24px;text-align:center;animation:bounce 1.2s infinite;margin:8px 0 0}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
   small.ftnote{display:block;text-align:center;color:#9aa6bd;font-size:12px;margin-top:14px}
   .ftnote a{color:#9aa6bd;text-decoration:underline}
+  .nb{background:rgba(0,0,0,.18);border-radius:10px;padding:8px 10px;margin-top:10px;font-size:12px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -44,11 +45,12 @@
   <p class="lead">Vliegtuig hoorbaar in tuin / op straat — dient direct een klacht in</p>
   <button class="btn btn-pwa hidden" id="installBtn"><span class="em">📥</span><span class="ttl">Toevoegen aan startscherm<small>Daarna 1 tap = klacht ingediend</small></span></button>
   <div class="ff-card hidden" id="ffCard">
-    <div class="arrow">⬆️</div>
-    <h3>Toevoegen aan startscherm</h3>
-    <div class="ff-step"><div class="ff-num">1</div>Tik <span class="ff-key">⋮</span> rechtsboven</div>
-    <div class="ff-step"><div class="ff-num">2</div>Kies <strong>Toevoegen aan startscherm</strong></div>
+    <h3>📲 Installeer als app op je startscherm</h3>
+    <div class="ff-step"><div class="ff-num">1</div>Tik <span class="ff-key">⋮</span> in Firefox-menu (rechtsonder op Android)</div>
+    <div class="ff-step"><div class="ff-num">2</div>Kies <strong>Installeren</strong> of <strong>Toevoegen aan startscherm</strong></div>
     <div class="ff-step"><div class="ff-num">3</div>Bevestig in pop-up + Pixel-scherm</div>
+    <div class="nb">Al geïnstalleerd? Het Klacht-icoon staat op je startscherm of in je app-lijst (Pixel: Instellingen → Startscherm → "App-icoontjes toevoegen aan startscherm" AAN).</div>
+    <div class="arrow-down">⬇️</div>
   </div>
   <a class="btn btn-go" id="goBtn" href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=3"><span class="em">➜</span><span class="ttl">Klacht NU indienen<small>Geluid buiten</small></span></a>
   <div class="info"><p><strong>Geluid Buiten</strong> dient automatisch een klacht in op het Casper-portaal. Het script vult datum, tijd en oorzaak voor je in en klikt op Verstuur.</p><p style="margin-top:8px"><a href="install.html">→ Installatie-instructies</a></p></div>
@@ -66,8 +68,13 @@
   var deferredPrompt = null;
   var installBtn = document.getElementById('installBtn');
   var ffCard = document.getElementById('ffCard');
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); });
-  setTimeout(function () { if (!deferredPrompt && isAndroid && isFirefox) ffCard.classList.remove('hidden'); }, 1200);
+  // Chromium: beforeinstallprompt fires — show install button
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); ffCard.classList.add('hidden'); });
+  // Firefox Android (en alle Android-non-Chrome): toon ff-card meteen — Firefox vuurt nooit beforeinstallprompt
+  if (isAndroid && !isStandalone) {
+    // Toon meteen, hide alleen als Chromium toch een install-prompt aanbiedt
+    setTimeout(function () { if (!deferredPrompt) ffCard.classList.remove('hidden'); }, 100);
+  }
   installBtn.addEventListener('click', function () { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(function () { installBtn.classList.add('hidden'); localStorage.setItem(FLAG, 'yes'); }); deferredPrompt = null; });
   document.getElementById('goBtn').addEventListener('click', function () { localStorage.setItem(FLAG, 'yes'); });
   window.addEventListener('appinstalled', function () { localStorage.setItem(FLAG, 'yes'); installBtn.classList.add('hidden'); ffCard.classList.add('hidden'); });
