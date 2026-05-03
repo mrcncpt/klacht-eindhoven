@@ -88,14 +88,14 @@
       <a class="btn" href="https://play.google.com/store/apps/details?id=org.mozilla.firefox" target="_blank">▶️ Firefox in Play Store</a>
     </div>
 
-    <div class="step">
+    <div class="step" id="stepTM">
       <h2><span class="num">2</span>Installeer Tampermonkey in Firefox</h2>
       <p>Open Firefox en installeer de Tampermonkey-extensie.</p>
       <a class="btn" href="https://addons.mozilla.org/firefox/addon/tampermonkey/" target="_blank">▶️ Tampermonkey-add-on</a>
       <p class="hint">In Firefox: tik op ⋮ menu → "Add-ons" → installeer Tampermonkey.</p>
     </div>
 
-    <div class="step">
+    <div class="step" id="stepScript">
       <h2><span class="num">3</span>Installeer het Klacht-script</h2>
       <p>Open onderstaande link in <b>Firefox</b>. Tampermonkey vraagt of je het script wil installeren — tik <b>Install</b>.</p>
       <a class="btn" href="https://raw.githubusercontent.com/mrcncpt/klacht-eindhoven/main/klacht-eindhoven.user.js">▶️ Klacht-script installeren</a>
@@ -230,6 +230,24 @@
     }
   })();
 
+  // Detecteer of het Klacht-script via Tampermonkey draait. Als ons userscript v1.6+ matcht op deze pagina, zet hij document.body.dataset.tmKlachtScript en/of dispatcht 'tm-klacht-loaded'. Aanwezigheid daarvan = Tampermonkey + script geinstalleerd, dus stap 2 en stap 3 zijn klaar.
+  (function(){
+    var sTM = document.getElementById('stepTM');
+    var sScript = document.getElementById('stepScript');
+    function markDone(){
+      if (sTM) sTM.classList.add('done');
+      if (sScript) sScript.classList.add('done');
+    }
+    if (document.body && document.body.dataset && document.body.dataset.tmKlachtScript) { markDone(); return; }
+    document.addEventListener('tm-klacht-loaded', markDone, { once: true });
+    var tries = 0, max = 30;
+    var iv = setInterval(function(){
+      tries++;
+      if (document.body && document.body.dataset && document.body.dataset.tmKlachtScript) { markDone(); clearInterval(iv); return; }
+      if (tries >= max) clearInterval(iv);
+    }, 50);
+  })();
+
   // Detect Chrome on Android — show warning + Firefox-intent link
   (function(){
     var ua = navigator.userAgent;
@@ -238,12 +256,10 @@
     if (isAndroid && !isFirefox) {
       var warn = document.getElementById('ffWarn');
       var btn = document.getElementById('ffOpenBtn');
-      // Build intent URL forcing Firefox
       var here = location.host + location.pathname + location.search;
       btn.href = 'intent://' + here + '#Intent;scheme=https;package=org.mozilla.firefox;S.browser_fallback_url=' +
         encodeURIComponent('https://play.google.com/store/apps/details?id=org.mozilla.firefox') + ';end';
       warn.classList.add('show');
-      // Scroll to top so warning is visible
       window.scrollTo(0, 0);
     }
   })();
