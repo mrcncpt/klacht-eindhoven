@@ -25,6 +25,8 @@
   .btn-pwa{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.4)}
   .btn-pwa.hidden-after-install{display:none}
   .hidden{display:none!important}
+  .stats{background:#161d2f;border:1px solid #243150;border-radius:10px;padding:10px 12px;color:#cfd8ec;font-size:13px;text-align:center;margin:10px 0}
+  .stats strong{color:#22c55e;font-weight:800}
   .info{background:#161d2f;border:1px solid #243150;border-radius:14px;padding:14px;margin-top:18px;font-size:13px;color:#cfd8ec;line-height:1.55}
   .info a{color:#ffb800}
   .ff-card{background:linear-gradient(135deg,#ff9f00,#ff6b00);color:#fff;border-radius:16px;padding:18px;margin:14px 0}
@@ -56,45 +58,72 @@
     <div class="arrow-down">⬇️</div>
   </div>
   <a class="btn btn-go" id="goBtn" href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2"><span class="em">➜</span><span class="ttl">Klacht NU indienen<small>Geluid binnen</small></span></a>
+  <div class="stats hidden" id="histStats"></div>
   <div class="info"><p><strong>Geluid Binnen</strong> dient automatisch een klacht in op het Casper-portaal. Het script vult datum, tijd en oorzaak voor je in en klikt op Verstuur.</p><p style="margin-top:8px"><a href="install.html">→ Installatie-instructies</a></p></div>
-  <small class="ftnote"><a href="?reset">↻ Reset</a></small>
+  <small class="ftnote"><a href="?reset">↻ Reset</a> · <a href="#" id="clearHist">Historie wissen</a></small>
 </div>
 <script>
   var TARGET = 'https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2';
   var FLAG = 'klacht-binnen-installed';
+  var TYPE = 'binnen';
   var doReset = /[?&]reset(=|&|$)/i.test(location.search);
   if (doReset) { try { localStorage.removeItem(FLAG); } catch (e) {} history.replaceState({}, '', location.pathname); }
   var isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
   var isAndroid = /Android/.test(navigator.userAgent);
   var isFirefox = /Firefox/.test(navigator.userAgent);
   if (isStandalone && !doReset) { location.replace(TARGET); }
+  function getHistory() { try { return JSON.parse(localStorage.getItem('klacht-history') || '[]'); } catch (e) { return []; } }
+  function logKlacht(type) {
+    var h = getHistory();
+    h.push({ ts: Date.now(), type: type });
+    var cutoff = Date.now() - 365 * 24 * 60 * 60 * 1000;
+    h = h.filter(function (e) { return e.ts > cutoff; });
+    try { localStorage.setItem('klacht-history', JSON.stringify(h)); } catch (e) {}
+  }
+  function showStats() {
+    var h = getHistory();
+    if (!h.length) return;
+    var d = new Date(); d.setHours(0, 0, 0, 0);
+    var startToday = d.getTime();
+    var startWeek = startToday - 6 * 24 * 60 * 60 * 1000;
+    var today = h.filter(function (e) { return e.ts >= startToday; }).length;
+    var week = h.filter(function (e) { return e.ts >= startWeek; }).length;
+    var total = h.length;
+    var el = document.getElementById('histStats');
+    if (el) {
+      el.innerHTML = '📊 <strong>' + today + '</strong> vandaag · <strong>' + week + '</strong> deze week · <strong>' + total + '</strong> totaal';
+      el.classList.remove('hidden');
+    }
+  }
+  showStats();
+  document.getElementById('clearHist').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (confirm('Weet je zeker dat je je klacht-historie wilt wissen?')) {
+      try { localStorage.removeItem('klacht-history'); } catch (er) {}
+      var s = document.getElementById('histStats');
+      if (s) s.classList.add('hidden');
+    }
+  });
   var deferredPrompt = null;
   var installBtn = document.getElementById('installBtn');
   var ffCard = document.getElementById('ffCard');
-  // Chromium: beforeinstallprompt → opslaan voor on-click trigger
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; });
-  // De fysieke install-knop is altijd zichtbaar. Klik handelt per browser:
   installBtn.addEventListener('click', function () {
     if (deferredPrompt) {
-      // Chrome / Chromium: trigger native install-prompt
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(function (r) {
-        if (r && r.outcome === 'accepted') {
-          installBtn.classList.add('hidden-after-install');
-          localStorage.setItem(FLAG, 'yes');
-        }
+        if (r && r.outcome === 'accepted') { installBtn.classList.add('hidden-after-install'); localStorage.setItem(FLAG, 'yes'); }
       });
       deferredPrompt = null;
     } else {
-      // Firefox / overige: toon manuele instructies + scroll erheen + flash
       ffCard.classList.remove('hidden');
       ffCard.classList.remove('flash');
-      void ffCard.offsetWidth; // restart animation
+      void ffCard.offsetWidth;
       ffCard.classList.add('flash');
       ffCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
-  document.getElementById('goBtn').addEventListener('click', function () { localStorage.setItem(FLAG, 'yes'); });
+  document.getElementById('goBtn').addEventListener('click', function () { localStorage.setItem(FLAG, 'yes'); logKlacht(TYPE); });
   window.addEventListener('appinstalled', function () { localStorage.setItem(FLAG, 'yes'); installBtn.classList.add('hidden-after-install'); ffCard.classList.add('hidden'); });
 </script>
 </body>
