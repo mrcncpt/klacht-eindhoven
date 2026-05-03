@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klacht-NU — Eindhoven Airport in 1 tik</title>
+<style>
+  :root{
+    --bg:#0e1320; --card:#161d2f; --ink:#e8eef9; --muted:#9aa6bd;
+    --accent:#ffb800; --accent-ink:#1a1300; --ok:#22c55e; --line:#243150;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto;padding:24px 18px 60px}
+  header{padding:8px 0 18px}
+  .badge{display:inline-block;background:rgba(255,184,0,.12);color:var(--accent);padding:5px 10px;border-radius:999px;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+  h1{font-size:30px;line-height:1.15;margin:14px 0 8px;font-weight:800;letter-spacing:-.01em}
+  h2{font-size:20px;margin:30px 0 10px;font-weight:700}
+  h3{font-size:16px;margin:18px 0 8px;font-weight:600;color:var(--accent)}
+  p{margin:8px 0;color:var(--muted)}
+  p strong, li strong{color:var(--ink)}
+  .lead{font-size:17px;color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+  .step{display:flex;gap:14px;align-items:flex-start;margin:14px 0}
+  .step-num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .step-body{flex:1;min-width:0}
+  .step-body h3{margin-top:0;color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;font-size:15px}
+  .btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  code, .url-pill{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0a0f1c;border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:#cfd8ec;word-break:break-all;display:inline-block}
+  .url-pill{display:block}
+  details{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+  summary{cursor:pointer;font-weight:600}
+  pre{margin:10px 0 0;background:#0a0f1c;border:1px solid var(--line);border-radius:10px;padding:12px;color:#cfd8ec;font-size:12px;overflow:auto;max-height:340px}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0;color:var(--muted)}
+  .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .pill{background:#0a0f1c;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
+  .ok{color:var(--ok)}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(40px);background:var(--ok);color:#02220c;padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .tabs{display:flex;gap:6px;margin:10px 0 0;border-bottom:1px solid var(--line)}
+  .tab{padding:9px 12px;border:0;background:transparent;color:var(--muted);font-weight:600;cursor:pointer;border-bottom:2px solid transparent;font-size:14px}
+  .tab.active{color:var(--accent);border-color:var(--accent)}
+  .pane{display:none;padding-top:14px}
+  .pane.active{display:block}
+  .small{font-size:13px;color:var(--muted)}
+  .warn{background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.4);border-radius:10px;padding:10px 12px;color:#ffd76a;font-size:13px;margin-top:10px}
+  hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+  .footer{margin-top:36px;font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">Voor omwonenden Eindhoven Airport</span>
+    <h1>Klacht-NU<br><span style="color:var(--accent)">Eén tik</span> = klacht ingediend.</h1>
+    <p class="lead">Het officiële Casper-klachtportaal vraagt 8 klikken per klacht. Met dit scriptje wordt het er één — vanaf je homescreen, in een paar seconden, met je eigen account.</p>
+    <div class="pill-row">
+      <span class="pill">Geluid</span>
+      <span class="pill">Geluidkwaliteit in huis</span>
+      <span class="pill">Specifieke melding</span>
+      <span class="pill">Huidig tijdstip</span>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2 style="margin-top:0">Hoe het werkt</h2>
+    <p>Het script vult elk veld in zoals jij het normaal zou doen — datum vandaag, tijd nu, oorzaak Geluid, suboorzaak Geluidkwaliteit in huis, geen antwoord gewenst — en klikt op Verstuur. Je hoeft alleen ingelogd te zijn op <strong>jouw</strong> Casper-account.</p>
+    <p class="small ok">✓ Je gegevens blijven van jou. Iedereen logt in met zijn eigen account. Het script staat alleen op jouw telefoon.</p>
+  </div>
+
+  <h2>Installatie</h2>
+  <p>Kies je toestel:</p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="android">Android</button>
+      <button class="tab" data-tab="iphone">iPhone</button>
+      <button class="tab" data-tab="desktop">Desktop</button>
+    </div>
+
+    <!-- ANDROID -->
+    <div class="pane active" id="pane-android">
+      <p>Werkt in <strong>Firefox voor Android</strong> (gratis, ondersteunt extensies).</p>
+
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <h3>Installeer Firefox voor Android</h3>
+        <p>Via de Play Store. Open Firefox daarna minimaal één keer.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <h3>Voeg Tampermonkey toe</h3>
+        <p>In Firefox: Menu → Extensies → Tampermonkey installeren. Of ga naar
+          <code>addons.mozilla.org/firefox/addon/tampermonkey</code> en tik op "Add to Firefox".</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <h3>Installeer het Klacht-NU script</h3>
+        <p>Tik hieronder. Tampermonkey vraagt om bevestiging.</p>
+        <div class="row">
+          <a class="btn" href="klacht-eindhoven.user.js">Script installeren</a>
+          <button class="btn secondary" onclick="copyScript()">Kopieer scriptcode</button>
+        </div>
+      </div></div>
+
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <h3>Log eenmalig in op het Casper-portaal</h3>
+        <p>Open <code>ein.flighttracking.casper.aero/portal/</code> in Firefox en log in. De cookie blijft bewaard.</p>
+        <div class="row">
+          <a class="btn secondary" href="https://ein.flighttracking.casper.aero/portal/" target="_blank" rel="noopener">Open Casper-portaal</a>
+        </div>
+      </div></div>
+
+      <div class="step"><div class="step-num">5</div><div class="step-body">
+        <h3>Maak je homescreen-icoon "Klacht NU"</h3>
+        <p>Open deze link in Firefox (deze regelt alles):</p>
+        <span class="url-pill" id="trigger-url-android">https://ein.flighttracking.casper.aero/portal/?p=complaint-1#klachtnu</span>
+        <div class="row" style="margin-top:8px">
+          <button class="btn secondary" onclick="copyTrigger()">Kopieer link</button>
+        </div>
+        <p class="small">In Firefox: Menu (⋮) → "Toevoegen aan startscherm" / "Add to Home screen" → noem het bijvoorbeeld <strong>Klacht NU</strong>.</p>
+        <p>Klaar. Vanaf nu: tik op het icoon = klacht ingediend.</p>
+      </div></div>
+
+      <div class="warn">⚠️ Het werkt niet in standaard Chrome op Android (geen extensies). Gebruik Firefox.</div>
+    </div>
+
+    <!-- IPHONE -->
+    <div class="pane" id="pane-iphone">
+      <p>Werkt in <strong>Safari op iOS 15+</strong> via de gratis app <strong>Userscripts</strong>.</p>
+
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <h3>Installeer "Userscripts" uit de App Store</h3>
+        <p>Zoek "Userscripts" (icoon: spook). Open hem na installatie.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <h3>Activeer in Safari</h3>
+        <p>Instellingen → Safari → Extensies → Userscripts inschakelen + sta toe op alle websites.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <h3>Voeg het script toe</h3>
+        <p>Open Userscripts-app → "+" → Plak de scriptcode (knop hieronder kopieert hem).</p>
+        <div class="row">
+          <button class="btn" onclick="copyScript()">Kopieer scriptcode</button>
+        </div>
+      </div></div>
+
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <h3>Log in op Casper en maak homescreen-icoon</h3>
+        <p>Open in Safari:</p>
+        <span class="url-pill" id="trigger-url-iphone">https://ein.flighttracking.casper.aero/portal/?p=complaint-1#klachtnu</span>
+        <p class="small">Deelmenu (὎4) → "Zet op beginscherm" → noem het <strong>Klacht NU</strong>.</p>
+      </div></div>
+    </div>
+
+    <!-- DESKTOP -->
+    <div class="pane" id="pane-desktop">
+      <p>Voor Chrome / Edge / Firefox / Safari op laptop of pc.</p>
+
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <h3>Installeer Tampermonkey</h3>
+        <p>Via <code>tampermonkey.net</code> → kies je browser → klik Install.</p>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <h3>Installeer het Klacht-NU script</h3>
+        <div class="row">
+          <a class="btn" href="klacht-eindhoven.user.js">Script installeren</a>
+        </div>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <h3>Sla deze trigger-URL op als bladwijzer</h3>
+        <span class="url-pill">https://ein.flighttracking.casper.aero/portal/?p=complaint-1#klachtnu</span>
+        <p class="small">Of voeg toe als bookmark op je bladwijzerbalk. Klikken = klacht ingediend.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <h2>Andere keuzes maken?</h2>
+  <div class="card">
+    <p>Bovenin het script staat een <code>SETTINGS</code>-blok dat je kunt aanpassen — bijvoorbeeld:</p>
+    <ul>
+      <li><strong>Buitenshuis</strong> in plaats van binnenshuis: <code>subcauseValue: '3'</code></li>
+      <li><strong>Slaapverstoring</strong> (nachtelijke vlucht): <code>subcauseValue: '1'</code></li>
+      <li><strong>Antwoord ontvangen</strong>: <code>wantFeedback: true</code></li>
+      <li><strong>Niet automatisch versturen</strong> (controleer eerst): <code>autoSubmit: false</code></li>
+    </ul>
+  </div>
+
+  <h2>Veelgestelde vragen</h2>
+  <div class="card">
+    <details><summary>Krijgt iemand anders mijn account te zien?</summary>
+      <p>Nee. Iedereen logt in met zijn eigen Casper-account. Het script doet niets meer dan wat jij anders zelf zou klikken — alleen sneller.</p>
+    </details>
+    <details><summary>Wat als ik op een tijdstip wil klagen dat al voorbij is?</summary>
+      <p>Open de URL met <code>&amp;tijd=22:35</code> erachter (achter het <code>?p=complaint-1</code>, dus: <code>?p=complaint-1&amp;tijd=22:35#klachtnu</code>). Het script gebruikt dan dat tijdstip in plaats van "nu".</p>
+    </details>
+    <details><summary>Wat als er ineens een Google-vinkje verschijnt?</summary>
+      <p>Het portaal heeft een latente reCAPTCHA. Komt die ooit tevoorschijn (anti-spam), dan stopt het script en mag jij even tikken op het vinkje + Verstuur. Daarna pakt het weer over op normale snelheid.</p>
+    </details>
+    <details><summary>Werkt het ook voor andere luchthavens?</summary>
+      <p>Het script is gemaakt voor Eindhoven Airport (Casper-portaal). Schiphol, Rotterdam-Den Haag, Maastricht en Lelystad gebruiken hetzelfde Casper-systeem maar mogelijk net andere domeinen — pas dan de <code>@match</code>-regel bovenaan het script aan.</p>
+    </details>
+    <details><summary>Wat doet het script precies?</summary>
+      <pre id="scriptCode"></pre>
+    </details>
+  </div>
+
+  <hr>
+  <p class="small">Dit is geen officiële tool van Eindhoven Airport, RIC of Casper Aero. Geen account-gegevens worden ergens opgeslagen — alles draait lokaal in je browser, op jouw apparaat.</p>
+  <div class="footer">Versie 1.0 — gemaakt om klagen makkelijker te maken, niet om bot-spam te plegen. Gebruik met verstand.</div>
+</div>
+
+<div class="toast" id="toast">Gekopieerd ✓</div>
+
+<script>
+  // Tabs
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('pane-'+t.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Detecteer mobiel platform en open juiste tab
+  (function(){
+    var ua = navigator.userAgent;
+    var target = 'desktop';
+    if (/Android/i.test(ua)) target = 'android';
+    else if (/iPhone|iPad|iPod/i.test(ua)) target = 'iphone';
+    var btn = document.querySelector('.tab[data-tab="'+target+'"]');
+    if (btn) btn.click();
+  })();
+
+  function toast(msg){
+    var el = document.getElementById('toast');
+    el.textContent = msg || 'Gekopieerd ✓';
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'), 1700);
+  }
+
+  function copyTrigger(){
+    var u = 'https://ein.flighttracking.casper.aero/portal/?p=complaint-1#klachtnu';
+    navigator.clipboard.writeText(u).then(()=>toast('Link gekopieerd ✓'));
+  }
+
+  // Laad scriptcode in <pre> en in clipboard-handler
+  var SCRIPT_URL = 'klacht-eindhoven.user.js';
+  fetch(SCRIPT_URL).then(r=>r.text()).then(text=>{
+    document.getElementById('scriptCode').textContent = text;
+    window.__scriptText = text;
+  }).catch(()=>{
+    document.getElementById('scriptCode').textContent = 'Open klacht-eindhoven.user.js naast deze pagina.';
+  });
+
+  function copyScript(){
+    if (!window.__scriptText) {
+      toast('Scriptcode laadt nog…');
+      return;
+    }
+    navigator.clipboard.writeText(window.__scriptText).then(()=>toast('Scriptcode gekopieerd ✓'));
+  }
+</script>
+</body>
+</html>
