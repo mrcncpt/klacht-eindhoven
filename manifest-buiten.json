@@ -1,6 +1,6 @@
 {
-  "name": "Klacht Buiten",
-  "short_name": "Klacht Buiten",
+  "name": "Meld Buiten — Geluidsoverlast",
+  "short_name": "Meld Buiten",
   "start_url": "buiten.html?source=pwa",
   "scope": "./",
   "display": "standalone",
