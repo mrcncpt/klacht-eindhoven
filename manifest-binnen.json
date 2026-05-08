@@ -1,6 +1,6 @@
 {
-  "name": "Klacht Binnen",
-  "short_name": "Klacht Binnen",
+  "name": "Meld Binnen — Geluidsoverlast",
+  "short_name": "Meld Binnen",
   "start_url": "binnen.html?source=pwa",
   "scope": "./",
   "display": "standalone",
