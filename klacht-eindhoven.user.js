@@ -1,10 +1,12 @@
 // ==UserScript==
-// @name         Klacht Eindhoven Airport — 1-tik melden
-// @namespace    https://ralfkerkhof.nl/klacht-eindhoven
-// @version      1.7.0
-// @description  Dien automatisch een geluidsklacht in bij Eindhoven Airport. Subcause via ?sub=N (1=Slaapverstoring, 2=Geluid in huis, 3=Geluid buiten, 7=Grondgeluid). Random delays, progressbar, Tampermonkey-detectie. Na succesvolle klacht navigeert hij terug naar de PWA-launcher zodat je direct opnieuw kan klagen.
+// @name         MeldGeluidsoverlast — Eindhoven Airport 1-tap melder
+// @namespace    https://meldgeluidsoverlast.nl/
+// @version      1.8.0
+// @description  MeldGeluidsoverlast — 1-tap geluidsmelding bij Eindhoven Airport. Subcause via ?sub=N (1=Slaapverstoring, 2=Binnen, 3=Buiten, 7=Grondgeluid). Random delays, progressbar, Tampermonkey-detectie. Na succesvolle melding terug naar PWA-launcher.
 // @match        https://ein.flighttracking.casper.aero/portal/*
 // @match        https://mrcncpt.github.io/klacht-eindhoven/*
+// @match        https://meldgeluidsoverlast.nl/*
+// @match        https://www.meldgeluidsoverlast.nl/*
 // @run-at       document-end
 // @grant        none
 // @license      MIT
@@ -16,12 +18,14 @@
     'use strict';
 
     // Op de install/landing-pagina (github.io): alleen een vlag zetten zodat install.html ziet dat Tampermonkey + dit script geinstalleerd zijn. Geen klacht-logica daar.
-    if (location.host === 'mrcncpt.github.io') {
+    if (location.host === 'mrcncpt.github.io' || /(^|\.)meldgeluidsoverlast\.nl$/.test(location.host)) {
         var ping = function () {
             if (!document.body) { setTimeout(ping, 30); return; }
             try {
-                document.body.dataset.tmKlachtScript = '1.7.0';
-                document.dispatchEvent(new CustomEvent('tm-klacht-loaded', { detail: { version: '1.7.0' } }));
+                document.body.dataset.tmMgoScript = '1.8.0';
+                document.body.dataset.tmKlachtScript = '1.8.0';
+                document.dispatchEvent(new CustomEvent('tm-mgo-loaded', { detail: { version: '1.8.0' } });
+                document.dispatchEvent(new CustomEvent('tm-klacht-loaded', { detail: { version: '1.8.0' } }));
             } catch (e) {}
         };
         ping();
@@ -69,14 +73,14 @@
             b = document.createElement('div');
             b.id = '__klacht_banner';
             b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;font-family:-apple-system,sans-serif;color:#fff;background:#161d2f;border-bottom:1px solid #243150;';
-            b.innerHTML = '<div style="padding:8px 14px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700"><span id="__kbtxt">Klacht-NU</span><span id="__kbpct" style="font-size:12px;color:#9aa6bd">0%</span></div><div style="height:4px;background:#0a0f1c"><div id="__kbbar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#ffb800);transition:width .4s ease"></div></div>';
+            b.innerHTML = '<div style="padding:8px 14px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700"><span id="__kbtxt">MeldGeluidsoverlast</span><span id="__kbpct" style="font-size:12px;color:#9aa6bd">0%</span></div><div style="height:4px;background:#0a0f1c"><div id="__kbbar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#ffb800);transition:width .4s ease"></div></div>';
             document.body.appendChild(b);
         }
         if (color) b.style.background = color;
         var t = document.getElementById('__kbtxt');
         var p = document.getElementById('__kbpct');
         var bar = document.getElementById('__kbbar');
-        if (t) t.textContent = 'Klacht-NU — ' + label;
+        if (t) t.textContent = 'Meld — ' + label;
         if (p) p.textContent = pct + '%';
         if (bar) bar.style.width = pct + '%';
     }
@@ -124,7 +128,7 @@
         if (typeof tries === 'undefined') tries = 100;
         try { if (test()) { cb(); return; } } catch (e) {}
         if (tries > 0) setTimeout(function () { wait(test, cb, tries - 1); }, rand(120, 200));
-        else { showBanner(0, 'Timeout op ' + bodyId, '#ef4444'); }
+        else { showBanner(0, 'Timeout op ' + bodyId + ' — herlaad de pagina', '#ef4444'); }
     }
 
     function handlerBound(selector) {
@@ -232,13 +236,18 @@
                             delay(400, 900, function () {
                                 clickBtn('#cl_next');
                                 clearFlag();
-                                showBanner(100, 'Klacht ingediend ✓ — terug naar app...', '#16a34a');
+                                showBanner(100, 'Melding verstuurd ✓ — terug naar app...', '#16a34a');
                                 // Navigeer na 2 seconden terug naar de PWA-launcher zodat user direct opnieuw kan klagen
                                 setTimeout(function () {
                                     var subToType = { '1': 'slaap', '2': 'binnen', '3': 'buiten' };
                                     var t = subToType[SETTINGS.subcauseValue];
                                     if (t) {
-                                        location.replace('https://mrcncpt.github.io/klacht-eindhoven/' + t + '.html?done=1');
+                                        // Prefer custom domain if user opened from there, else fall back to github.io
+                                        var ref = document.referrer || '';
+                                        var base = (/meldgeluidsoverlast\.nl/.test(ref))
+                                            ? 'https://meldgeluidsoverlast.nl/'
+                                            : 'https://mrcncpt.github.io/klacht-eindhoven/';
+                                        location.replace(base + t + '.html?done=1');
                                     } else {
                                         try { window.close(); } catch (e) {}
                                         try { history.back(); } catch (e) {}
@@ -247,7 +256,7 @@
                             });
                         } else {
                             clearFlag();
-                            showBanner(100, 'Klaar — controleer en verstuur', '#f59e0b');
+                            showBanner(100, 'Klaar — controleer en verstuur de melding', '#f59e0b');
                         }
                     });
                 });
