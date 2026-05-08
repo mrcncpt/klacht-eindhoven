@@ -1,6 +1,6 @@
 {
-  "name": "Klacht Slaap",
-  "short_name": "Klacht Slaap",
+  "name": "Meld Slaap — Geluidsoverlast",
+  "short_name": "Meld Slaap",
   "start_url": "slaap.html?source=pwa",
   "scope": "./",
   "display": "standalone",
