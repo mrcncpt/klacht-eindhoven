@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Klacht-NU — Installatie</title>
+<meta name="description" content="MeldGeluidsoverlast — installatie-instructies voor de 1-tap geluidsmelder Eindhoven Airport.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeldGeluidsoverlast">
+<meta property="og:title" content="MeldGeluidsoverlast — Installatie">
+<meta property="og:description" content="Installeer de 1-tap geluidsmelder voor Eindhoven Airport in 6 stappen.">
+<meta property="og:url" content="https://meldgeluidsoverlast.nl/install.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiNmZmI4MDAiLz48cGF0aCBmaWxsPSIjMWExMzAwIiBkPSJNMzIgMTNsNCAxOCAxNCA2LTE0IDQtNCAxMi00LTEyLTE0LTQgMTQtNnoiLz48L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiNmZmI4MDAiLz48cGF0aCBmaWxsPSIjMWExMzAwIiBkPSJNMzIgMTNsNCAxOCAxNCA2LTE0IDQtNCAxMi00LTEyLTE0LTQgMTQtNnoiLz48L3N2Zz4=">
+<title>MeldGeluidsoverlast — Installatie</title>
 <style>
   *{box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0e1320;color:#e6e9ef;margin:0;padding:20px;line-height:1.55}
@@ -57,20 +66,20 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Klacht-NU</h1>
-  <p class="sub">Eén tik = automatische geluidsklacht bij Eindhoven Airport</p>
+  <h1>MeldGeluidsoverlast</h1>
+  <p class="sub">Eén tik = automatische geluidsmelding bij Eindhoven Airport</p>
 
   <div class="ff-warn" id="ffWarn">
     <h2>⚠️ Open deze pagina eerst in Firefox</h2>
-    <p>Je gebruikt nu Chrome. Op Android werkt dit alleen met Firefox — Chrome ondersteunt geen userscripts en kan de Klacht-app niet installeren.</p>
+    <p>Je gebruikt nu Chrome. Op Android werkt dit alleen met Firefox — Chrome ondersteunt geen userscripts en kan de Meld-app niet installeren.</p>
     <p>Tap onderstaande knop om deze pagina in Firefox te heropenen (installeer Firefox eerst als je hem nog niet hebt).</p>
     <a class="btn-ff" id="ffOpenBtn" href="#">▶️ Heropen in Firefox</a>
   </div>
 
   <div class="intro">
     <p><b>Wat doet deze app?</b></p>
-    <p>Vliegt er een toestel laag over je huis? Tik op het Klacht-icoon op je startscherm en je klacht wordt automatisch ingediend op het Casper-portaal van Eindhoven Airport. Geen 8 klikken meer — gewoon één tik.</p>
-    <p>Je hoeft dit eenmalig in te stellen. Daarna heb je 1, 2 of 3 icoontjes op je homescreen: voor geluid binnen, buiten en slaapverstoring. Iedereen klaagt met zijn eigen Casper-account.</p>
+    <p>Vliegt er een toestel laag over je huis? Tik op het Meld-icoon op je startscherm en je melding wordt automatisch ingediend op het Casper-portaal van Eindhoven Airport. Geen 8 klikken meer — gewoon één tik.</p>
+    <p>Je hoeft dit eenmalig in te stellen. Daarna heb je 1, 2 of 3 icoontjes op je homescreen: voor geluid binnen, buiten en slaapverstoring. Iedereen meldt met zijn eigen Casper-account.</p>
   </div>
 
   <div class="tabs">
@@ -96,9 +105,9 @@
     </div>
 
     <div class="step" id="stepScript">
-      <h2><span class="num">3</span>Installeer het Klacht-script</h2>
+      <h2><span class="num">3</span>Installeer het Meld-script</h2>
       <p>Open onderstaande link in <b>Firefox</b>. Tampermonkey vraagt of je het script wil installeren — tik <b>Install</b>.</p>
-      <a class="btn" href="https://raw.githubusercontent.com/mrcncpt/klacht-eindhoven/main/klacht-eindhoven.user.js">▶️ Klacht-script installeren</a>
+      <a class="btn" href="https://raw.githubusercontent.com/mrcncpt/klacht-eindhoven/main/klacht-eindhoven.user.js">▶️ Meld-script installeren</a>
     </div>
 
     <div class="step">
@@ -110,20 +119,20 @@
 
     <div class="step">
       <h2><span class="num">5</span>Test het script</h2>
-      <p>Open deze test-link in Firefox. Als alles werkt zie je een groene balk en wordt de klacht automatisch ingediend.</p>
-      <a class="btn btn-sec" href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2">▶️ Test: Klacht Binnen</a>
+      <p>Open deze test-link in Firefox. Als alles werkt zie je een groene balk en wordt de melding automatisch ingediend.</p>
+      <a class="btn btn-sec" href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2">▶️ Test: Meld Binnen</a>
     </div>
 
     <div class="step">
-      <h2><span class="num">6</span>Klacht-apps op je startscherm</h2>
-      <p>Tik één (of alle drie) van onderstaande knoppen <b>in Firefox</b>. Bij elke tik krijg je de optie "Toevoegen aan startscherm" — bevestig en je hebt een eigen Klacht-icoon.</p>
-      <p class="hint">Elke tik op zo'n homescreen-icoon = directe automatische klacht. Geen Chrome/Firefox-chooser meer.</p>
+      <h2><span class="num">6</span>Meld-apps op je startscherm</h2>
+      <p>Tik één (of alle drie) van onderstaande knoppen <b>in Firefox</b>. Bij elke tik krijg je de optie "Toevoegen aan startscherm" — bevestig en je hebt een eigen Meld-icoon.</p>
+      <p class="hint">Elke tik op zo'n homescreen-icoon = directe automatische melding. Geen Chrome/Firefox-chooser meer.</p>
 
       <a class="pwa-card" href="binnen.html">
         <div class="pwa-row">
           <div class="pwa-badge badge-binnen">B</div>
           <div class="pwa-info">
-            <h3>Klacht Binnen <span class="recommended">MEEST GEBRUIKT</span></h3>
+            <h3>Meld Binnen <span class="recommended">MEEST GEBRUIKT</span></h3>
             <p>Geluidkwaliteit binnenshuis — toestel boven je huis</p>
           </div>
           <div class="pwa-arrow">›</div>
@@ -134,7 +143,7 @@
         <div class="pwa-row">
           <div class="pwa-badge badge-buiten">T</div>
           <div class="pwa-info">
-            <h3>Klacht Buiten</h3>
+            <h3>Meld Buiten</h3>
             <p>Geluidkwaliteit buitenshuis — overlast in de tuin/op straat</p>
           </div>
           <div class="pwa-arrow">›</div>
@@ -145,7 +154,7 @@
         <div class="pwa-row">
           <div class="pwa-badge badge-slaap">S</div>
           <div class="pwa-info">
-            <h3>Klacht Slaap</h3>
+            <h3>Meld Slaap</h3>
             <p>Slaapverstoring — toestel haalt je uit je slaap</p>
           </div>
           <div class="pwa-arrow">›</div>
@@ -178,8 +187,8 @@
     </div>
 
     <div class="step">
-      <h2><span class="num">2</span>Installeer het Klacht-script</h2>
-      <a class="btn" href="https://raw.githubusercontent.com/mrcncpt/klacht-eindhoven/main/klacht-eindhoven.user.js">▶️ Klacht-script installeren</a>
+      <h2><span class="num">2</span>Installeer het Meld-script</h2>
+      <a class="btn" href="https://raw.githubusercontent.com/mrcncpt/klacht-eindhoven/main/klacht-eindhoven.user.js">▶️ Meld-script installeren</a>
     </div>
 
     <div class="step">
@@ -190,14 +199,14 @@
     <div class="step">
       <h2><span class="num">4</span>Maak bookmarks of pin tabs</h2>
       <p>Bookmark deze links voor 1-klik klagen:</p>
-      <p>🟢 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2" style="color:#22c55e">Klacht Binnen</a></p>
-      <p>🟠 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=3" style="color:#f59e0b">Klacht Buiten</a></p>
-      <p>🟣 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=1" style="color:#8b5cf6">Klacht Slaap</a></p>
+      <p>🟢 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=2" style="color:#22c55e">Meld Binnen</a></p>
+      <p>🟠 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=3" style="color:#f59e0b">Meld Buiten</a></p>
+      <p>🟣 <a href="https://ein.flighttracking.casper.aero/portal/?klachtnu=1&sub=1" style="color:#8b5cf6">Meld Slaap</a></p>
     </div>
   </div>
 
   <p class="footer">
-    <a href="https://github.com/mrcncpt/klacht-eindhoven" target="_blank">Open source op GitHub</a> · MIT License
+    <a href="https://meldgeluidsoverlast.nl/" target="_blank">meldgeluidsoverlast.nl</a> · <a href="https://github.com/mrcncpt/klacht-eindhoven" target="_blank">Open source op GitHub</a> · MIT License
   </p>
 </div>
 
